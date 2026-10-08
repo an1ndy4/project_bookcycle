@@ -100,18 +100,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   const SizedBox(height: 25),
-                  const Text(
-                    'Daftar Akun Baru',
-                    style: TextStyle(
-                      color: Color(0xFF092B8F),
-                      fontSize: 23,
-                      fontWeight: FontWeight.bold,
+                  const Center(
+                    child: Text(
+                      'Daftar Akun Baru',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color(0xFF092B8F),
+                        fontSize: 23,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
+
                   const SizedBox(height: 6),
-                  const Text(
-                    'Mulai perjalanan bukumu di sini!',
-                    style: TextStyle(color: Color(0xFF092B8F), fontSize: 16),
+
+                  const Center(
+                    child: Text(
+                      'Mulai perjalanan bukumu di sini!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color(0xFF092B8F),
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 30),
                   _buildInputField(

@@ -89,18 +89,29 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 25),
-                  const Text(
-                    'Selamat datang kembali!',
-                    style: TextStyle(
-                      color: Color(0xFF092B8F),
-                      fontSize: 23,
-                      fontWeight: FontWeight.bold,
+                  const Center(
+                    child: Text(
+                      'Selamat datang kembali!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color(0xFF092B8F),
+                        fontSize: 23,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
+
                   const SizedBox(height: 6),
-                  const Text(
-                    'Login untuk melanjutkan.',
-                    style: TextStyle(color: Color(0xFF092B8F), fontSize: 16),
+
+                  const Center(
+                    child: Text(
+                      'Login untuk melanjutkan.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color(0xFF092B8F),
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 30),
                   TextFormField(
