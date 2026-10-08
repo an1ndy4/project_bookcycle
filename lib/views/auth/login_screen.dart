@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../controllers/auth_controller.dart';
 import 'register_screen.dart';
 import '../user/home_screen.dart';
@@ -99,10 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 6),
                   const Text(
                     'Login untuk melanjutkan.',
-                    style: TextStyle(
-                      color: Color(0xFF092B8F),
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(color: Color(0xFF092B8F), fontSize: 16),
                   ),
                   const SizedBox(height: 30),
                   TextFormField(
@@ -235,10 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Center(
                     child: Text(
                       'atau masuk dengan',
-                      style: TextStyle(
-                        color: Color(0xFF092B8F),
-                        fontSize: 13,
-                      ),
+                      style: TextStyle(color: Color(0xFF092B8F), fontSize: 13),
                     ),
                   ),
                   const SizedBox(height: 14),

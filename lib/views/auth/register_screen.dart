@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../controllers/auth_controller.dart';
 import '../user/home_screen.dart';
 
@@ -32,11 +33,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     final authController = Provider.of<AuthController>(context, listen: false);
 
+    // PERBAIKAN: 'namaLengkap' (huruf L besar) sesuai dengan auth_controller.dart
     final success = await authController.register(
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
       namaLengkap: _nameController.text.trim(),
-      nomorHp: _phoneController.text.trim(),
+      nomorHp: _phoneController.text.trim().isEmpty
+          ? null
+          : _phoneController.text.trim(),
     );
 
     if (!mounted) return;
@@ -45,7 +49,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Registrasi Berhasil! Silakan Login.'),
-          backgroundColor: Colors.green,
+          backgroundColor: Color(0xFF087F3E),
         ),
       );
       Navigator.pop(context);
@@ -107,10 +111,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 6),
                   const Text(
                     'Mulai perjalanan bukumu di sini!',
-                    style: TextStyle(
-                      color: Color(0xFF092B8F),
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(color: Color(0xFF092B8F), fontSize: 16),
                   ),
                   const SizedBox(height: 30),
                   _buildInputField(
@@ -118,9 +119,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     icon: Icons.person_outline,
                     hint: 'Nama Lengkap',
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (value == null || value.isEmpty)
                         return 'Nama harus diisi';
-                      }
+                      if (value.length < 3) return 'Nama minimal 3 karakter';
                       return null;
                     },
                   ),
@@ -129,22 +130,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     icon: Icons.email_outlined,
                     hint: 'Email',
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (value == null || value.isEmpty)
                         return 'Email harus diisi';
-                      }
-                      if (!value.contains('@')) {
+                      if (!value.contains('@') || !value.contains('.'))
                         return 'Format email tidak valid';
-                      }
                       return null;
                     },
                   ),
                   _buildInputField(
                     controller: _phoneController,
                     icon: Icons.phone_outlined,
-                    hint: 'Nomor HP',
+                    hint: 'Nomor HP (Opsional)',
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Nomor HP harus diisi';
+                      if (value != null &&
+                          value.isNotEmpty &&
+                          value.length < 10) {
+                        return 'Nomor HP tidak valid';
                       }
                       return null;
                     },
@@ -183,12 +184,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (value == null || value.isEmpty)
                         return 'Password harus diisi';
-                      }
-                      if (value.length < 6) {
+                      if (value.length < 6)
                         return 'Password minimal 6 karakter';
-                      }
                       return null;
                     },
                   ),
@@ -199,7 +198,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         width: double.infinity,
                         height: 47,
                         child: ElevatedButton(
-                          onPressed: controller.isLoading ? null : _handleRegister,
+                          onPressed: controller.isLoading
+                              ? null
+                              : _handleRegister,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF087F3E),
                             foregroundColor: Colors.white,
@@ -219,7 +220,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 )
                               : const Text(
                                   'Daftar',
-                                  style: TextStyle(fontSize: 14),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                         ),
                       );
@@ -229,29 +233,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const Center(
                     child: Text(
                       'atau daftar dengan',
-                      style: TextStyle(
-                        color: Color(0xFF092B8F),
-                        fontSize: 13,
-                      ),
+                      style: TextStyle(color: Color(0xFF092B8F), fontSize: 13),
                     ),
                   ),
                   const SizedBox(height: 14),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  // BAGIAN TOMBOL SOSIAL YANG SUDAH DIPERBAIKI POSISINYA
+                  Row(
                     children: [
-                      Text(
-                        'G  Google',
-                        style: TextStyle(
-                          color: Color(0xFF092B8F),
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: _buildSocialButton(
+                          logo: _buildGoogleLogo(),
+                          label: 'Google',
+                          onTap: () {
+                            // TODO: Implement Google Sign-In
+                          },
                         ),
                       ),
-                      SizedBox(width: 30),
-                      Text(
-                        '●  Facebook',
-                        style: TextStyle(
-                          color: Color(0xFF092B8F),
-                          fontWeight: FontWeight.bold,
+                      const SizedBox(width: 15),
+                      Expanded(
+                        child: _buildSocialButton(
+                          logo: _buildFacebookLogo(),
+                          label: 'Facebook',
+                          onTap: () {
+                            // TODO: Implement Facebook Login
+                          },
                         ),
                       ),
                     ],
@@ -283,6 +288,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -291,6 +297,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
+
+  // =========================================================
+  //  AREA METHOD HELPER (DITAMBAHKAN DI SINI)
+  // =========================================================
 
   Widget _buildInputField({
     required TextEditingController controller,
@@ -304,15 +314,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         controller: controller,
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: const TextStyle(
-            color: Color(0xFFB7C9EA),
-            fontSize: 13,
-          ),
-          prefixIcon: Icon(
-            icon,
-            color: const Color(0xFF092B8F),
-            size: 21,
-          ),
+          hintStyle: const TextStyle(color: Color(0xFFB7C9EA), fontSize: 13),
+          prefixIcon: Icon(icon, color: const Color(0xFF092B8F), size: 21),
           enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: Color(0xFFDDE4F0)),
           ),
@@ -324,4 +327,142 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
+
+  // 1. Method untuk Logo Google
+  // ✅ Logo Google Berwarna-warni (seperti logo asli)
+  Widget _buildGoogleLogo() {
+    return SizedBox(
+      width: 22,
+      height: 22,
+      child: CustomPaint(painter: GoogleLogoPainter()),
+    );
+  }
+
+  // 2. Method untuk Logo Facebook
+  Widget _buildFacebookLogo() {
+    return Container(
+      width: 20,
+      height: 20,
+      decoration: BoxDecoration(
+        color: const Color(0xFF1877F2),
+        borderRadius: BorderRadius.circular(3),
+      ),
+      child: const Icon(Icons.facebook, color: Colors.white, size: 14),
+    );
+  }
+
+  // 3. Method untuk Tombol Social (Kotak Berborder)
+  Widget _buildSocialButton({
+    required Widget logo,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 47,
+        decoration: BoxDecoration(
+          border: Border.all(color: const Color(0xFFDDE4F0)),
+          borderRadius: BorderRadius.circular(7),
+          color: Colors.white,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            logo,
+            const SizedBox(width: 10),
+            Text(
+              label,
+              style: const TextStyle(
+                color: Color(0xFF092B8F),
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+} // <--- INI ADALAH PENUTUP CLASS _RegisterScreenState
+
+// ✅ Custom Painter untuk Logo Google Berwarna
+class GoogleLogoPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double centerX = size.width / 2;
+    final double centerY = size.height / 2;
+    final double radius = size.width / 2;
+
+    // Warna resmi Google
+    const Color red = Color(0xFFEA4335);
+    const Color yellow = Color(0xFFFBBC05);
+    const Color green = Color(0xFF34A853);
+    const Color blue = Color(0xFF4285F4);
+
+    final Paint paint = Paint()..style = PaintingStyle.fill;
+
+    // Gambar huruf "G" dengan 4 warna menggunakan arc
+    // Bagian atas (merah) - dari 0° sampai 90°
+    paint.color = red;
+    canvas.drawArc(
+      Rect.fromCircle(center: Offset(centerX, centerY), radius: radius),
+      -0.3, // mulai dari sedikit di atas
+      1.2, // arc length
+      true,
+      paint,
+    );
+
+    // Bagian kanan (kuning)
+    paint.color = yellow;
+    canvas.drawArc(
+      Rect.fromCircle(center: Offset(centerX, centerY), radius: radius),
+      0.9,
+      1.2,
+      true,
+      paint,
+    );
+
+    // Bagian bawah (hijau)
+    paint.color = green;
+    canvas.drawArc(
+      Rect.fromCircle(center: Offset(centerX, centerY), radius: radius),
+      2.1,
+      1.2,
+      true,
+      paint,
+    );
+
+    // Bagian kiri (biru)
+    paint.color = blue;
+    canvas.drawArc(
+      Rect.fromCircle(center: Offset(centerX, centerY), radius: radius),
+      3.3,
+      1.2,
+      true,
+      paint,
+    );
+
+    // Gambar huruf "G" putih di tengah (untuk efek logo)
+    final TextPainter textPainter = TextPainter(
+      text: const TextSpan(
+        text: 'G',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Arial',
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+    textPainter.paint(
+      canvas,
+      Offset(centerX - textPainter.width / 2, centerY - textPainter.height / 2),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

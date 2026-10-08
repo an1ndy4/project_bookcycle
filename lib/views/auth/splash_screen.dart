@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../controllers/auth_controller.dart'; // ✅ Perbaiki path ke controllers
-import 'login_screen.dart';                      // ✅ Karena satu folder, cukup nama file
-import '../user/home_screen.dart';               // ✅ Naik 1 folder (views), lalu masuk user
+import 'login_screen.dart'; // ✅ Karena satu folder, cukup nama file
+import '../user/home_screen.dart'; // ✅ Naik 1 folder (views), lalu masuk user
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -20,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _checkLoginStatus() async {
     await Future.delayed(const Duration(seconds: 3));
-    
+
     if (!mounted) return;
 
     final authController = Provider.of<AuthController>(context, listen: false);
