@@ -20,7 +20,7 @@ class SupabaseService {
 
   // Helper untuk mendapatkan user ID yang sedang login
   static String? get currentUserId => _client?.auth.currentUser?.id;
-  
+
   // Helper untuk cek apakah user sudah login
   static bool get isLoggedIn => _client?.auth.currentUser != null;
 }

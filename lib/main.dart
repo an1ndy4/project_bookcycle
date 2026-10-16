@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'services/supabase_service.dart';
 import 'controllers/auth_controller.dart';
 import 'controllers/book_controller.dart';
@@ -51,7 +52,8 @@ class BookCycleApp extends StatelessWidget {
           '/register': (context) => const RegisterScreen(),
           '/home': (context) => const HomeScreen(),
           // ✅ DIHAPUS: '/book-detail' tidak bisa ada di routes karena butuh parameter 'book'
-          '/upload-book': (context) => SellBookScreen(), // ✅ Gunakan SellBookScreen
+          '/upload-book': (context) =>
+              SellBookScreen(), // ✅ Gunakan SellBookScreen
           '/profile': (context) => const ProfileScreen(),
         },
       ),
